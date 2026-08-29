@@ -43,6 +43,10 @@ stale spreadsheets or uncited AI answers. One run will:
   Devpost submission copy, and a 2.5-minute demo script prepared.
 - Public source repository created at
   `https://github.com/simonlin1212/vendorproof` after the clean review.
+- GitHub Actions quality gate added with immutable action references; it runs
+  locked dependency install, Ruff, and the full coverage suite on each push.
+- Browser functional regression passed for the product promise, procurement
+  form, safety copy, health endpoint, sample brief, and visible provider error.
 - Xano persistence contract and server-side adapter implemented; live workspace
   provisioning is pending account access and a verified zero-cost checkout.
 

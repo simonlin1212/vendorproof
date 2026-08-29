@@ -8,6 +8,7 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/simonlin1212/vendorproof/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/simonlin1212/vendorproof/actions/workflows/ci.yml/badge.svg"></a>
   <img alt="Python 3.12" src="https://img.shields.io/badge/Python-3.12-19312c">
   <img alt="40 tests" src="https://img.shields.io/badge/tests-40%20passing-c8f74a">
   <img alt="coverage 94%" src="https://img.shields.io/badge/coverage-94%25-ff5b3d">
