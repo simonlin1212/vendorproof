@@ -66,19 +66,21 @@ VendorProof turns that spreadsheet into a repeatable evidence file:
 
 ## Architecture
 
-```text
-Browser
-  |
-  v
-Flask / Cloud Run
-  |-- Gemini 3.5 Flash: claim extraction + evidence assessment
-  |-- SerpApi: Google Light + Google News live results
-  |-- Provenance guard: exact URL matching + uncertainty enforcement
-  `-- Xano: briefs, snapshots, and change receipts
+```mermaid
+flowchart LR
+    B[Procurement brief] --> F
+    subgraph CR[Cloud Run]
+        F[Flask orchestrator] --> G[Evidence guard]
+    end
+    F <--> M[Gemini 3.5 Flash<br>extract + assess]
+    F <--> S[SerpApi<br>Google Light + Google News]
+    F <--> X[Xano<br>briefs + snapshots]
+    G --> D[Decision file<br>publish / review / hold]
 ```
 
 Provider credentials stay server-side. The browser never receives the SerpApi
-key, Xano token, or Google credentials.
+key, Xano token, or Google credentials. Gemini, SerpApi, and Xano are external
+services; only the Flask orchestrator and evidence guard run inside Cloud Run.
 
 ## Safety and evidence guarantees
 
