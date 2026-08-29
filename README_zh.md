@@ -9,7 +9,7 @@
 
 ---
 
-![VendorProof 采购需求界面](assets/screenshots/vendorproof-home.png)
+![VendorProof 采购需求界面](assets/screenshots/vendorproof-cloud-run.png)
 
 VendorProof 是面向小团队的证据优先采购助手。输入软件或供应商需求后，
 系统会通过 SerpApi 获取当前 Google 网页和新闻结果，再由 Gemini 判断关键

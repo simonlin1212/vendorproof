@@ -13,13 +13,15 @@ Updated: 2026-08-29 Asia/Singapore
 - The evidence service, provider adapters, web interface, Xano contract, and
   deployment image are implemented. Forty tests pass at 94% coverage, and the
   final independent review found no actionable regressions.
+- A dedicated Cloud Run preproduction service is live and its home and health
+  routes pass; analysis remains gated on real SerpApi and Xano credentials.
 
 ## Immediate next actions
 
 1. Complete Devpost, SerpApi, and zero-cost Xano account access.
 2. Provision the Xano workspace and save a real snapshot.
 3. Run the complete live integration smoke test.
-4. Deploy and verify the production service.
+4. Promote the verified preproduction revision after attaching secrets.
 5. Record the demo and submit to both cash tracks.
 
 ## Frozen decisions

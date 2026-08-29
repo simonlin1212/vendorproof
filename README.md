@@ -25,7 +25,7 @@
 
 ---
 
-![VendorProof procurement brief interface](assets/screenshots/vendorproof-home.png)
+![VendorProof procurement brief interface](assets/screenshots/vendorproof-cloud-run.png)
 
 VendorProof is an evidence-first AI procurement desk for small teams. Paste a
 software or supplier brief and it checks the decision-critical claims against
@@ -120,7 +120,8 @@ The Xano schema and endpoint contract are documented in
 The repository includes a reproducible Python 3.12 container image. Production
 deployment uses Cloud Run with secrets supplied as runtime environment values.
 The public demo URL will be added after the real SerpApi and Xano integration
-smoke test passes.
+smoke test passes. The current health-only deployment and its promotion gate are
+recorded in [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
 
 ## Verification status
 

@@ -47,6 +47,14 @@ stale spreadsheets or uncited AI answers. One run will:
   locked dependency install, Ruff, and the full coverage suite on each push.
 - Browser functional regression passed for the product promise, procurement
   form, safety copy, health endpoint, sample brief, and visible provider error.
+- Dedicated Google Cloud runtime identity `vendorproof-runtime` created with
+  Vertex AI user permission only.
+- Cloud Run preproduction revision `vendorproof-web-00001-hzf` deployed at
+  `https://vendorproof-web-qjv2kumm3q-as.a.run.app`; public home and health
+  checks passed in curl and a real browser.
+- The unconfigured analysis path was verified to fail visibly with HTTP 503;
+  the URL is intentionally withheld from the Devpost demo field until live
+  SerpApi and Xano evidence passes.
 - Xano persistence contract and server-side adapter implemented; live workspace
   provisioning is pending account access and a verified zero-cost checkout.
 
