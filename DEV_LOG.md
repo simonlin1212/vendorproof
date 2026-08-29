@@ -41,6 +41,8 @@ stale spreadsheets or uncited AI answers. One run will:
   the in-app browser.
 - English and Chinese public documentation, a verified interface screenshot,
   Devpost submission copy, and a 2.5-minute demo script prepared.
+- Public source repository created at
+  `https://github.com/simonlin1212/vendorproof` after the clean review.
 - Xano persistence contract and server-side adapter implemented; live workspace
   provisioning is pending account access and a verified zero-cost checkout.
 

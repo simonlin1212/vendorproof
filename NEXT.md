@@ -5,6 +5,7 @@ Updated: 2026-08-29 Asia/Singapore
 ## Current state
 
 - Independent Git repository created.
+- Public repository: `https://github.com/simonlin1212/vendorproof`.
 - SerpApi and Xano cash tracks selected.
 - Product direction fixed: evidence-first vendor and software procurement desk.
 - Official SerpApi Python SDK and `serpapi-search-tools` reference implementation

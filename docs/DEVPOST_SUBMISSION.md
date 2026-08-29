@@ -98,7 +98,7 @@ SerpApi Google News, Xano, Pydantic, Cloud Run, Docker, pytest, Ruff.
 ## Submission links
 
 - Live demo: `[ADD_CLOUD_RUN_URL]`
-- Source code: `[ADD_GITHUB_URL]`
+- Source code: `https://github.com/simonlin1212/vendorproof`
 - Demo video: `[ADD_VIDEO_URL]`
 - Primary image: `assets/screenshots/vendorproof-home.png`
 
