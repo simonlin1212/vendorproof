@@ -70,7 +70,8 @@ def test_serpapi_gateway_searches_web_and_news_and_deduplicates() -> None:
     )
     gateway = SerpApiSearchGateway(client=client, results_per_engine=5)
 
-    results = gateway.search("Vendor price and recent reliability")
+    outcome = gateway.search("Vendor price and recent reliability")
+    results = outcome.sources
 
     assert [call["engine"] for call in client.calls] == [
         "google_light",
@@ -85,6 +86,7 @@ def test_serpapi_gateway_searches_web_and_news_and_deduplicates() -> None:
     assert results[0].search_id == "web-123"
     assert results[1].source == "Example News"
     assert results[1].published_at == "2 days ago"
+    assert outcome.failed_engines == []
 
 
 def test_serpapi_gateway_keeps_partial_results_and_fails_when_both_fail() -> None:
@@ -98,7 +100,9 @@ def test_serpapi_gateway_keeps_partial_results_and_fails_when_both_fail() -> Non
             },
         }
     )
-    assert len(SerpApiSearchGateway(client=partial).search("query")) == 1
+    outcome = SerpApiSearchGateway(client=partial).search("query")
+    assert len(outcome.sources) == 1
+    assert outcome.failed_engines == ["google_light"]
 
     failed = FakeSerpClient(
         {

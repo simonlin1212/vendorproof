@@ -3,8 +3,11 @@ from datetime import UTC, datetime
 import pytest
 
 from vendorproof.models import (
+    MAX_EXPLANATION_CHARS,
+    MAX_RECOMMENDATION_CHARS,
     ClaimAssessment,
     ClaimCandidate,
+    SearchOutcome,
     SnapshotReceipt,
     SourceRecord,
     Verdict,
@@ -23,16 +26,25 @@ class FakeExtractor:
 
 
 class FakeSearcher:
-    def __init__(self, sources: list[SourceRecord], *, fail: bool = False) -> None:
+    def __init__(
+        self,
+        sources: list[SourceRecord],
+        *,
+        fail: bool = False,
+        failed_engines: list[str] | None = None,
+    ) -> None:
         self.sources = sources
         self.fail = fail
+        self.failed_engines = failed_engines or []
         self.queries: list[str] = []
 
-    def search(self, query: str) -> list[SourceRecord]:
+    def search(self, query: str) -> SearchOutcome:
         self.queries.append(query)
         if self.fail:
             raise RuntimeError("provider unavailable")
-        return self.sources
+        return SearchOutcome(
+            sources=self.sources, failed_engines=self.failed_engines
+        )
 
 
 class FakeJudge:
@@ -119,7 +131,7 @@ def test_audit_normalizes_input_and_skips_search_when_no_claims() -> None:
     assert extractor.inputs == ["A short draft."]
     assert searcher.queries == []
     assert judge.calls == []
-    assert report.overall_action == "publish"
+    assert report.overall_action == "review"
     assert report.claims == []
 
 
@@ -182,6 +194,64 @@ def test_search_failure_becomes_visible_insufficient_evidence() -> None:
     assert "search failed" in result.assessment.explanation.lower()
     assert result.search_error == "Live search was unavailable for this claim."
     assert judge.calls == []
+
+
+def test_partial_search_failure_downgrades_definitive_verdict() -> None:
+    service = AuditService(
+        FakeExtractor([claim()]),
+        FakeSearcher([source()], failed_engines=["google_news"]),
+        FakeJudge(assessment()),
+    )
+
+    report = service.audit("A procurement brief.")
+
+    result = report.claims[0]
+    assert result.assessment.verdict == Verdict.INSUFFICIENT
+    assert result.assessment.confidence == 0.5
+    assert result.search_error == "Partial search failure: google_news."
+    assert report.overall_action == "review"
+
+
+def test_partial_search_failure_preserves_changed_hold() -> None:
+    service = AuditService(
+        FakeExtractor([claim()]),
+        FakeSearcher([source()], failed_engines=["google_news"]),
+        FakeJudge(assessment(verdict=Verdict.CHANGED)),
+    )
+
+    report = service.audit("A procurement brief.")
+
+    result = report.claims[0]
+    assert result.assessment.verdict == Verdict.CHANGED
+    assert "partial" in result.assessment.explanation.lower()
+    assert result.search_error == "Partial search failure: google_news."
+    assert report.overall_action == "hold"
+
+
+def test_partial_search_failure_keeps_assessment_within_contract_limits() -> None:
+    long_assessment = ClaimAssessment(
+        claim="placeholder",
+        verdict=Verdict.CONFLICTING,
+        confidence=0.9,
+        explanation="x" * MAX_EXPLANATION_CHARS,
+        recommendation="y" * MAX_RECOMMENDATION_CHARS,
+        citation_urls=["https://example.com/current"],
+    )
+    service = AuditService(
+        FakeExtractor([claim()]),
+        FakeSearcher([source()], failed_engines=["google_news"]),
+        FakeJudge(long_assessment),
+    )
+
+    report = service.audit("A procurement brief.")
+    result = report.claims[0].assessment
+
+    assert result.verdict == Verdict.CONFLICTING
+    assert len(result.explanation) <= MAX_EXPLANATION_CHARS
+    assert len(result.recommendation) <= MAX_RECOMMENDATION_CHARS
+    assert result.explanation.endswith("failed during this run.")
+    assert result.recommendation.endswith("missing evidence channel.")
+    assert result == ClaimAssessment.model_validate(result.model_dump())
 
 
 def test_audit_persists_snapshot_and_surfaces_xano_failure() -> None:

@@ -14,6 +14,7 @@ from vendorproof.models import (
     ClaimAssessment,
     ClaimBatch,
     ClaimCandidate,
+    SearchOutcome,
     SnapshotReceipt,
     SourceRecord,
     Verdict,
@@ -45,20 +46,24 @@ class SerpApiSearchGateway:
         self._country = country
         self._language = language
 
-    def search(self, query: str) -> list[SourceRecord]:
+    def search(self, query: str) -> SearchOutcome:
         sources: list[SourceRecord] = []
-        failures: list[Exception] = []
+        failures: list[tuple[str, Exception]] = []
         for engine in ("google_light", "google_news"):
             try:
                 payload = self._request(engine, query)
                 sources.extend(self._parse(payload, engine))
             except Exception as exc:
-                failures.append(exc)
+                failures.append((engine, exc))
 
         deduplicated = self._deduplicate(sources)
         if not deduplicated and failures:
-            raise RuntimeError("SerpApi web and news searches failed.") from failures[0]
-        return deduplicated
+            error = RuntimeError("SerpApi web and news searches failed.")
+            raise error from failures[0][1]
+        return SearchOutcome(
+            sources=deduplicated,
+            failed_engines=[engine for engine, _ in failures],
+        )
 
     def _request(self, engine: str, query: str) -> Mapping[str, Any]:
         params: dict[str, Any] = {

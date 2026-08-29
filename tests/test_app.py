@@ -98,3 +98,13 @@ def test_reviewer_code_is_enforced(monkeypatch) -> None:
     assert denied.status_code == 403
     assert service.briefs == ["valid brief"]
     assert allowed.status_code == 200
+
+
+def test_multibyte_brief_reaches_character_validation() -> None:
+    service = FakeService()
+    app = create_app(lambda: service)
+
+    response = app.test_client().post("/analyze", data={"brief": "测" * 12_000})
+
+    assert response.status_code == 200
+    assert service.briefs == ["测" * 12_000]

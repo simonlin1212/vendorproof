@@ -28,7 +28,7 @@ def create_app(
 ) -> Flask:
     load_dotenv()
     app = Flask(__name__)
-    app.config.update(MAX_CONTENT_LENGTH=20_000)
+    app.config.update(MAX_CONTENT_LENGTH=150_000)
     factory = service_factory or _service_from_environment
 
     @app.get("/")

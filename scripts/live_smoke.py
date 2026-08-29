@@ -5,6 +5,7 @@ import os
 from dotenv import load_dotenv
 
 from vendorproof.app import SAMPLE_BRIEF, _service_from_environment
+from vendorproof.smoke import validate_live_report
 
 
 def main() -> None:
@@ -15,6 +16,7 @@ def main() -> None:
         raise SystemExit(f"Missing required configuration: {', '.join(missing)}")
 
     report = _service_from_environment().audit(SAMPLE_BRIEF)
+    validate_live_report(report)
     print(
         f"LIVE_SMOKE=ok action={report.overall_action} "
         f"claims={len(report.claims)}"
@@ -29,7 +31,5 @@ def main() -> None:
         print(f"XANO_SNAPSHOT=ok id={report.snapshot.snapshot_id}")
     elif os.getenv("XANO_SNAPSHOT_ENDPOINT"):
         raise SystemExit(report.persistence_error or "Xano snapshot was not saved.")
-
-
 if __name__ == "__main__":
     main()

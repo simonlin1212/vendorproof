@@ -9,16 +9,17 @@ Updated: 2026-08-29 Asia/Singapore
 - Product direction fixed: evidence-first vendor and software procurement desk.
 - Official SerpApi Python SDK and `serpapi-search-tools` reference implementation
   identified.
-- The evidence service is implemented with provenance enforcement and 100%
-  unit-test coverage for the current core.
+- The evidence service, provider adapters, web interface, Xano contract, and
+  deployment image are implemented. Forty tests pass at 94% coverage, and the
+  final independent review found no actionable regressions.
 
 ## Immediate next actions
 
-1. Implement and test the SerpApi and Gemini adapters.
-2. Build the procurement workflow and web interface.
-3. Add Xano persistence after the SerpApi vertical slice is verified.
-4. Obtain event/API access and run a live integration smoke test.
-5. Deploy, record the demo, and submit to both cash tracks.
+1. Complete Devpost, SerpApi, and zero-cost Xano account access.
+2. Provision the Xano workspace and save a real snapshot.
+3. Run the complete live integration smoke test.
+4. Deploy and verify the production service.
+5. Record the demo and submit to both cash tracks.
 
 ## Frozen decisions
 

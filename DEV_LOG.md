@@ -31,11 +31,16 @@ stale spreadsheets or uncited AI answers. One run will:
 - Bounded input, deduplication, search-failure handling, and overall risk state.
 - Citation-provenance guard: definitive verdicts are downgraded unless at least
   one cited URL was observed in the current SerpApi run.
-- Twenty-five unit tests passing with 94% whole-project coverage.
+- Forty unit tests passing with 94% whole-project coverage.
+- Five independent review rounds plus a final clean re-review completed. Six
+  initial evidence-safety and deployment findings plus seven follow-up boundary
+  regressions were fixed and covered by new tests.
 - Google Vertex AI smoke test passed with `gemini-3.5-flash`; the sample brief
   produced a structured eight-item verification checklist.
 - Responsive procurement-dossier interface implemented and visually checked in
   the in-app browser.
+- English and Chinese public documentation, a verified interface screenshot,
+  Devpost submission copy, and a 2.5-minute demo script prepared.
 - Xano persistence contract and server-side adapter implemented; live workspace
   provisioning is pending account access and a verified zero-cost checkout.
 

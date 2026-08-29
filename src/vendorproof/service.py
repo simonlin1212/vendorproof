@@ -4,10 +4,13 @@ from datetime import UTC, datetime
 from typing import Protocol
 
 from vendorproof.models import (
+    MAX_EXPLANATION_CHARS,
+    MAX_RECOMMENDATION_CHARS,
     AuditReport,
     ClaimAssessment,
     ClaimCandidate,
     ClaimResult,
+    SearchOutcome,
     SnapshotReceipt,
     SourceRecord,
     Verdict,
@@ -26,7 +29,7 @@ class ClaimExtractor(Protocol):
 
 
 class LiveSearcher(Protocol):
-    def search(self, query: str) -> list[SourceRecord]: ...
+    def search(self, query: str) -> SearchOutcome: ...
 
 
 class EvidenceJudge(Protocol):
@@ -103,7 +106,7 @@ class AuditService:
 
     def _audit_claim(self, candidate: ClaimCandidate) -> ClaimResult:
         try:
-            sources = self._searcher.search(candidate.query)
+            outcome = self._searcher.search(candidate.query)
         except Exception:
             return ClaimResult(
                 candidate=candidate,
@@ -122,12 +125,52 @@ class AuditService:
                 search_error="Live search was unavailable for this claim.",
             )
 
-        assessment = self._judge.assess(candidate, sources)
-        guarded = self._enforce_citation_provenance(assessment, sources)
+        assessment = self._judge.assess(candidate, outcome.sources)
+        guarded = self._enforce_citation_provenance(assessment, outcome.sources)
+        search_error = None
+        if outcome.failed_engines:
+            failed = ", ".join(outcome.failed_engines)
+            if guarded.verdict in {Verdict.CHANGED, Verdict.CONFLICTING}:
+                explanation_suffix = (
+                    f" Evidence is partial because {failed} failed during this run."
+                )
+                recommendation_suffix = (
+                    " Also retry the missing evidence channel."
+                )
+                guarded = guarded.model_copy(
+                    update={
+                        "explanation": self._append_bounded(
+                            guarded.explanation,
+                            explanation_suffix,
+                            MAX_EXPLANATION_CHARS,
+                        ),
+                        "recommendation": self._append_bounded(
+                            guarded.recommendation,
+                            recommendation_suffix,
+                            MAX_RECOMMENDATION_CHARS,
+                        ),
+                    }
+                )
+            else:
+                guarded = guarded.model_copy(
+                    update={
+                        "verdict": Verdict.INSUFFICIENT,
+                        "confidence": min(guarded.confidence, 0.5),
+                        "explanation": (
+                            "Only partial live evidence was available because "
+                            f"{failed} failed during this run."
+                        ),
+                        "recommendation": (
+                            "Retry the missing evidence channel before shortlisting."
+                        ),
+                    }
+                )
+            search_error = f"Partial search failure: {failed}."
         return ClaimResult(
             candidate=candidate,
-            sources=sources,
+            sources=outcome.sources,
             assessment=guarded,
+            search_error=search_error,
         )
 
     @staticmethod
@@ -154,7 +197,16 @@ class AuditService:
         return assessment.model_copy(update=updates)
 
     @staticmethod
+    def _append_bounded(text: str, suffix: str, max_chars: int) -> str:
+        if len(text) + len(suffix) <= max_chars:
+            return text + suffix
+        prefix = text[: max_chars - len(suffix)].rstrip()
+        return prefix + suffix
+
+    @staticmethod
     def _overall_action(results: list[ClaimResult]) -> str:
+        if not results:
+            return "review"
         verdicts = {result.assessment.verdict for result in results}
         if verdicts & {Verdict.CHANGED, Verdict.CONFLICTING}:
             return "hold"
