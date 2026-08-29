@@ -1,0 +1,52 @@
+[project]
+name = "vendorproof"
+version = "0.1.0"
+description = "An evidence-first AI procurement desk backed by live web data."
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "Flask==3.1.3",
+    "google-genai==2.20.0",
+    "gunicorn==26.2.0",
+    "pydantic==2.12.5",
+    "python-dotenv==1.2.3",
+    "requests==2.34.2",
+    "serpapi==1.1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest==9.0.3",
+    "pytest-cov==7.0.0",
+    "ruff==0.14.14",
+]
+
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+vendorproof = ["templates/*.html", "static/*.css", "static/*.js"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+markers = ["integration: requires live Google and SerpApi credentials"]
+
+[tool.coverage.run]
+branch = true
+source = ["vendorproof"]
+
+[tool.coverage.report]
+show_missing = true
+skip_empty = true
+fail_under = 85
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]

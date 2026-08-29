@@ -1,0 +1,269 @@
+:root {
+  --ink: #17211d;
+  --paper: #f3f0e7;
+  --paper-deep: #e7e1d4;
+  --signal: #ff5b35;
+  --acid: #d8f33d;
+  --forest: #21483a;
+  --line: rgba(23, 33, 29, 0.22);
+  --muted: #69716d;
+  --max: 1440px;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  color: var(--ink);
+  background:
+    linear-gradient(rgba(23, 33, 29, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(23, 33, 29, 0.035) 1px, transparent 1px),
+    var(--paper);
+  background-size: 32px 32px;
+  font-family: "Avenir Next", Avenir, "Helvetica Neue", sans-serif;
+}
+
+a { color: inherit; }
+
+.masthead {
+  max-width: var(--max);
+  margin: 0 auto;
+  min-height: 84px;
+  padding: 18px 38px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--ink);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  letter-spacing: -0.02em;
+}
+
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  color: var(--paper);
+  background: var(--ink);
+  font: 700 12px/1 "Courier New", monospace;
+}
+
+.live-stamp {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font: 600 12px/1 "Courier New", monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.live-stamp span {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #2aa76e;
+  box-shadow: 0 0 0 5px rgba(42, 167, 110, 0.15);
+}
+
+main { max-width: var(--max); margin: 0 auto; }
+
+.hero {
+  min-height: 720px;
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  border-bottom: 1px solid var(--ink);
+}
+
+.hero-copy {
+  padding: 70px 52px 58px 38px;
+  border-right: 1px solid var(--ink);
+}
+
+.eyebrow {
+  margin: 0 0 22px;
+  font: 700 11px/1.2 "Courier New", monospace;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+h1, h2, h3, p { margin-top: 0; }
+
+h1 {
+  margin-bottom: 35px;
+  font-family: Didot, Baskerville, Georgia, serif;
+  font-size: clamp(72px, 8vw, 126px);
+  font-weight: 400;
+  line-height: 0.78;
+  letter-spacing: -0.065em;
+}
+
+h1 em { color: var(--signal); font-weight: 400; }
+
+.lede {
+  max-width: 640px;
+  font-size: clamp(18px, 1.6vw, 25px);
+  line-height: 1.45;
+  letter-spacing: -0.02em;
+}
+
+.proof-strip {
+  margin-top: 58px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.proof-strip span {
+  padding: 8px 12px;
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  font-size: 12px;
+  background: rgba(255,255,255,0.25);
+}
+
+.brief-form {
+  align-self: center;
+  margin: 56px;
+  padding: 32px;
+  background: var(--forest);
+  color: #f6f2e7;
+  box-shadow: 16px 16px 0 var(--acid);
+  animation: arrive 520ms ease-out both;
+}
+
+@keyframes arrive {
+  from { opacity: 0; transform: translate(12px, 20px); }
+  to { opacity: 1; transform: translate(0, 0); }
+}
+
+.form-index {
+  margin-bottom: 44px;
+  color: var(--acid);
+  font: 700 11px/1 "Courier New", monospace;
+  letter-spacing: 0.12em;
+}
+
+.brief-form label {
+  display: block;
+  margin-bottom: 8px;
+  font-family: Didot, Baskerville, Georgia, serif;
+  font-size: clamp(28px, 3vw, 44px);
+  line-height: 1.05;
+}
+
+.form-help { max-width: 540px; color: #c7d0cb; line-height: 1.5; }
+
+textarea, input {
+  width: 100%;
+  border: 1px solid rgba(255,255,255,0.35);
+  border-radius: 0;
+  color: #fff;
+  background: rgba(0,0,0,0.14);
+  font: inherit;
+}
+
+textarea {
+  min-height: 220px;
+  resize: vertical;
+  padding: 18px;
+  line-height: 1.55;
+}
+
+textarea:focus, input:focus { outline: 3px solid var(--acid); outline-offset: 2px; }
+
+.code-label { margin-top: 20px; font: 600 14px/1.2 inherit !important; }
+input { padding: 12px; }
+
+.error {
+  margin-top: 16px;
+  padding: 12px;
+  border-left: 4px solid var(--signal);
+  background: rgba(255,91,53,0.14);
+}
+
+.form-actions { display: flex; gap: 12px; margin-top: 22px; align-items: center; }
+
+button {
+  min-height: 52px;
+  padding: 0 20px;
+  border: 1px solid var(--acid);
+  color: var(--ink);
+  background: var(--acid);
+  font: 700 13px/1 inherit;
+  cursor: pointer;
+}
+
+button:hover { transform: translateY(-2px); }
+
+.sample-button { color: #fff; background: transparent; border-color: rgba(255,255,255,0.42); }
+.cost-note { margin: 18px 0 0; color: #aebdb5; font-size: 11px; line-height: 1.45; }
+
+.report { padding: 74px 38px 90px; border-bottom: 1px solid var(--ink); }
+.report-header { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; margin-bottom: 50px; }
+.report-header h2 { font: 400 clamp(38px, 5vw, 74px)/0.95 Didot, Baskerville, Georgia, serif; letter-spacing: -0.04em; }
+.report-header > p { align-self: end; max-width: 400px; line-height: 1.5; }
+.action-publish { color: #1d8457; }
+.action-review { color: #a16b00; }
+.action-hold { color: #c84328; }
+.history-note { margin: -20px 0 38px; padding: 14px 16px; border-left: 4px solid var(--forest); background: rgba(33,72,58,0.09); font-size: 13px; }
+.history-note strong { margin-right: 8px; font-family: "Courier New", monospace; text-transform: uppercase; }
+.history-warning { border-left-color: var(--signal); background: rgba(255,91,53,0.09); }
+
+.claim-list { border-top: 1px solid var(--ink); }
+.claim-card { display: grid; grid-template-columns: 90px 1fr; border-bottom: 1px solid var(--line); }
+.claim-number { padding: 26px 0; font: 700 13px/1 "Courier New", monospace; }
+.claim-body { padding: 24px 0 30px; }
+.claim-meta { display: flex; gap: 16px; color: var(--muted); font: 700 11px/1 "Courier New", monospace; text-transform: uppercase; }
+.verdict { padding: 5px 8px; margin-top: -5px; color: var(--ink); background: var(--paper-deep); }
+.verdict-supported .verdict { background: #bfe8cf; }
+.verdict-changed .verdict, .verdict-conflicting .verdict { background: #ffc6b8; }
+.verdict-insufficient .verdict { background: #f5df92; }
+.claim-card h3 { max-width: 920px; margin: 20px 0 16px; font: 400 clamp(25px, 3vw, 42px)/1.1 Didot, Baskerville, Georgia, serif; }
+.explanation, .recommendation { max-width: 850px; font-size: 16px; line-height: 1.6; }
+.recommendation strong { margin-right: 9px; color: var(--signal); text-transform: uppercase; font-size: 11px; letter-spacing: 0.08em; }
+.sources { margin-top: 25px; padding: 18px; background: rgba(255,255,255,0.42); }
+.sources h4 { margin: 0 0 10px; font: 700 11px/1 "Courier New", monospace; text-transform: uppercase; }
+.sources ol { margin: 0; padding-left: 22px; }
+.sources li { margin: 7px 0; overflow-wrap: anywhere; font-size: 13px; }
+.search-error { color: #b23623; font-weight: 700; }
+
+.method { padding: 80px 38px; color: var(--paper); background: var(--ink); }
+.method-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 70px; }
+.method h2 { font: 400 clamp(46px, 6vw, 88px)/0.92 Didot, Baskerville, Georgia, serif; letter-spacing: -0.04em; }
+.method-steps > div { display: grid; grid-template-columns: 52px 1fr; gap: 15px; padding: 22px 0; border-top: 1px solid rgba(255,255,255,0.28); line-height: 1.5; }
+.method-steps b { color: var(--acid); font: 700 12px/1 "Courier New", monospace; }
+
+footer { max-width: var(--max); margin: 0 auto; padding: 30px 38px; display: flex; justify-content: space-between; gap: 20px; font: 700 10px/1.4 "Courier New", monospace; text-transform: uppercase; }
+
+@media (max-width: 900px) {
+  .hero { grid-template-columns: 1fr; }
+  .hero-copy { border-right: 0; border-bottom: 1px solid var(--ink); }
+  .brief-form { margin: 42px 28px 56px; }
+  .method-grid, .report-header { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 600px) {
+  .masthead, .hero-copy, .report, .method, footer { padding-left: 20px; padding-right: 20px; }
+  .live-stamp { font-size: 9px; }
+  .hero-copy { padding-top: 50px; }
+  h1 { font-size: 68px; }
+  .brief-form { margin: 28px 18px 42px; padding: 24px; box-shadow: 9px 9px 0 var(--acid); }
+  .form-actions { align-items: stretch; flex-direction: column; }
+  .claim-card { grid-template-columns: 48px 1fr; }
+  .claim-body { min-width: 0; }
+  footer { flex-direction: column; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation: none !important; transition: none !important; }
+}

@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="VendorProof turns procurement briefs into live, cited vendor comparisons.">
+    <title>VendorProof | Evidence before commitment</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}">
+  </head>
+  <body>
+    <header class="masthead">
+      <a class="brand" href="/" aria-label="VendorProof home">
+        <span class="brand-mark">VP</span>
+        <span>VendorProof</span>
+      </a>
+      <div class="live-stamp"><span></span> Live web + news evidence</div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Procurement intelligence / 2026</p>
+          <h1>Evidence<br>before<br><em>commitment.</em></h1>
+          <p class="lede">Turn a messy software or supplier brief into a cited decision file. Pricing, limits, capabilities, and recent risks are checked against the live web.</p>
+          <div class="proof-strip" aria-label="VendorProof safeguards">
+            <span>Exact source URLs</span>
+            <span>Contradictions visible</span>
+            <span>No invented citations</span>
+          </div>
+        </div>
+
+        <form class="brief-form" action="/analyze" method="post">
+          <div class="form-index">01 / THE BRIEF</div>
+          <label for="brief">What are you trying to buy?</label>
+          <p class="form-help">Name the vendors, budget, team size, must-haves, and anything that could kill the deal.</p>
+          <textarea id="brief" name="brief" minlength="10" maxlength="12000" required placeholder="Compare three customer support tools for a five-person team...">{{ brief }}</textarea>
+          {% if access_required %}
+          <label class="code-label" for="access_code">Reviewer access code</label>
+          <input id="access_code" name="access_code" type="password" autocomplete="off" required>
+          {% endif %}
+          {% if error %}<div class="error" role="alert">{{ error }}</div>{% endif %}
+          <div class="form-actions">
+            <button type="submit">Build evidence file <span aria-hidden="true">↗</span></button>
+            <button class="sample-button" type="button" data-sample="{{ sample_brief }}">Use sample brief</button>
+          </div>
+          <p class="cost-note">A run checks up to five decision-critical claims across Google web and news results.</p>
+        </form>
+      </section>
+
+      {% if report %}
+      <section class="report" id="report" aria-labelledby="report-title">
+        <div class="report-header">
+          <div>
+            <p class="eyebrow">Evidence file / {{ report.generated_at.strftime('%Y-%m-%d %H:%M UTC') }}</p>
+            <h2 id="report-title">Decision state: <span class="action-{{ report.overall_action }}">{{ report.overall_action }}</span></h2>
+          </div>
+          <p>{{ report.claims|length }} critical checks completed with current SerpApi evidence.</p>
+        </div>
+
+        {% if report.snapshot %}
+        <div class="history-note">
+          <strong>Xano snapshot {{ report.snapshot.snapshot_id }}</strong>
+          {% if report.snapshot.previous_snapshot_id %}
+          Compared with {{ report.snapshot.previous_snapshot_id }}. {{ report.snapshot.changed_claims }} claims changed.
+          {% else %}
+          First evidence snapshot saved. Future refreshes can be compared against this run.
+          {% endif %}
+        </div>
+        {% elif report.persistence_error %}
+        <div class="history-note history-warning">{{ report.persistence_error }}</div>
+        {% endif %}
+
+        <div class="claim-list">
+          {% for result in report.claims %}
+          <article class="claim-card verdict-{{ result.assessment.verdict.value }}">
+            <div class="claim-number">{{ '%02d'|format(loop.index) }}</div>
+            <div class="claim-body">
+              <div class="claim-meta">
+                <span class="verdict">{{ result.assessment.verdict.value }}</span>
+                <span>{{ (result.assessment.confidence * 100)|round|int }}% confidence</span>
+              </div>
+              <h3>{{ result.candidate.text }}</h3>
+              <p class="explanation">{{ result.assessment.explanation }}</p>
+              <p class="recommendation"><strong>Next move</strong> {{ result.assessment.recommendation }}</p>
+              {% if result.assessment.citation_urls %}
+              <div class="sources">
+                <h4>Observed evidence</h4>
+                <ol>
+                  {% for citation in result.assessment.citation_urls %}
+                  <li><a href="{{ citation }}" target="_blank" rel="noopener noreferrer">{{ citation }}</a></li>
+                  {% endfor %}
+                </ol>
+              </div>
+              {% endif %}
+              {% if result.search_error %}<p class="search-error">{{ result.search_error }}</p>{% endif %}
+            </div>
+          </article>
+          {% else %}
+          <p class="empty-report">No externally verifiable procurement claims were found. Add named vendors, a budget, or concrete requirements and retry.</p>
+          {% endfor %}
+        </div>
+      </section>
+      {% endif %}
+
+      <section class="method">
+        <p class="eyebrow">Why this is different</p>
+        <div class="method-grid">
+          <h2>AI that shows<br>its working papers.</h2>
+          <div class="method-steps">
+            <div><b>01</b><span>Extracts the questions that could change a buying decision.</span></div>
+            <div><b>02</b><span>Searches current web and news data through SerpApi.</span></div>
+            <div><b>03</b><span>Rejects any citation the model did not actually observe.</span></div>
+            <div><b>04</b><span>Stores decision history in Xano for accountable refreshes.</span></div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>VendorProof</span>
+      <span>Built for DevNetwork API + Cloud + AI Hackathon 2026</span>
+      <span>SerpApi × Xano</span>
+    </footer>
+    <script src="{{ url_for('static', filename='app.js') }}" defer></script>
+  </body>
+</html>
