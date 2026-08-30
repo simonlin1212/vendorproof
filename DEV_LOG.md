@@ -1,6 +1,6 @@
 # VendorProof development log
 
-Updated: 2026-08-29 10:50 Asia/Singapore
+Updated: 2026-08-30 Asia/Singapore
 
 ## 1. Current status
 
@@ -9,23 +9,24 @@ procurement desk for the DevNetwork [API + Cloud + AI] Hackathon 2026, targeting
 the SerpApi and Xano cash tracks.
 
 The codebase, test suite, public repository, Cloud Run preproduction shell,
-submission copy, and demo script are complete. The project is **not submitted**
-and the public URL is **not yet a working demo**: real SerpApi and Xano accounts,
-credentials, and one accepted end-to-end evidence run are still required.
+submission copy, demo script, Devpost registration, and Xano backend are
+complete. The project is **not submitted** and the public URL is **not yet a
+working demo**: the real three-provider smoke has passed locally, but the
+accepted configuration still needs zero-traffic Cloud Run QA and promotion.
 
 | Area | State | Evidence |
 |---|---|---|
-| Source repository | Public and clean | `https://github.com/simonlin1212/vendorproof`, `main` at `d5dd5ec` before this log update |
+| Source repository | Public | `https://github.com/simonlin1212/vendorproof`; XanoScript is included under `xano/` in this update |
 | CI | Passing | GitHub Actions run `33229641295` |
-| Unit/regression tests | Passing | 40 tests, 94.37% whole-project coverage |
+| Unit/regression tests | Passing | 391 tests, 95.26% whole-project coverage |
 | Static quality | Passing | Ruff clean |
 | Gemini | Verified separately | Vertex AI structured-output smoke passed with `gemini-3.5-flash` in `global` |
 | Web UI | Implemented and checked | Desktop/mobile render plus browser functional assertions passed |
 | Cloud Run | Preproduction healthy | `vendorproof-web-00001-hzf`; home and health routes return HTTP 200 |
-| Real analysis | Gated | `POST /analyze` returns visible HTTP 503 while SerpApi/Xano are unconfigured |
-| Devpost registration | Waiting | Browser still requires the user's Devpost account/registration |
-| SerpApi account | Waiting | No project credential exists yet |
-| Xano workspace | Waiting | No live endpoint/token exists yet |
+| Real analysis | Local live smoke passed | Gemini + SerpApi + Xano produced five claims with live citations and Xano snapshot `42` |
+| Devpost registration | Complete | Simon's `linsizhen` profile is registered for the event; no empty submission was created |
+| SerpApi account | Verified and secured | API key is stored as Secret Manager version `1`; only the VendorProof runtime identity has access |
+| Xano workspace | Published and live-tested | Workspace `167898`, API group `430337`, endpoint `4027876`; adapter receipt `snapshot_id=9`, concurrent snapshots `13`–`14`, v4 migration snapshots `33`–`35`, v5 acceptance snapshots `36`–`41` |
 | Demo video | Script prepared, not recorded | Must use a real successful evidence run |
 | Final submission | Not started | Only after the live integration gate passes |
 
@@ -128,9 +129,20 @@ These guarantees are enforced in code, not left only in prompts:
   provider's exact citation bytes.
 - A definitive verdict without a current observed citation is downgraded.
 - Partial web/news failures stay visible and cannot produce a silent all-clear.
+- Unmappable generated checks stay visible and force `review`; they never vanish
+  silently or fail the whole evidence run when other checks remain valid.
 - Provider output is validated with Pydantic before rendering or persistence.
 - Xano receives the validated complete report snapshot, not a second model
   summary that could drift from the displayed result.
+- Each extracted claim carries a `comparison_key` derived from deterministic
+  entity and requirement atoms in the immutable brief. Mutable prose,
+  model-supplied domains, shorter nested anchors, and classifications cannot
+  alter identity.
+- Xano serializes each brief's compare-and-write operation with a transaction
+  and row lock, so simultaneous refreshes cannot share a stale predecessor.
+- Xano rejects requests unless the server-only `api_token` matches its private
+  workspace environment variable. The value is carried only over HTTPS between
+  Cloud Run and Xano and is not rendered in the browser.
 - Credentials remain server-side and are never sent to the browser or committed.
 - The production integration fails closed: missing SerpApi/Xano configuration
   yields a visible provider error, never fabricated sample evidence.
@@ -151,8 +163,8 @@ required for both sponsors.
 
 ### Automated verification
 
-- 40 tests pass.
-- Whole-project coverage is 94.37%, including branches.
+- 391 tests pass.
+- Whole-project coverage is 95.26%, including branches.
 - Ruff reports no findings.
 - GitHub Actions installs the locked environment, runs Ruff, and runs the full
   coverage suite on every push.
@@ -166,10 +178,24 @@ and live-smoke acceptance/failure conditions.
 
 ### Review convergence
 
-Five independent finding rounds and a final clean re-review were completed.
-Six initial evidence-safety/deployment findings and seven follow-up boundary
-regressions were fixed and covered by tests. The final review reported no
-actionable regressions.
+The earlier implementation completed five independent finding rounds and a
+clean re-review. The Xano integration then went through repeated independent
+review and repair rounds. They found missing-token handling, mutable prose
+identity, a concurrent stale-predecessor race, legacy key migration, silently
+rejected anchors, decimal segmentation, same-category collisions, ambiguous
+model classifications, and vendor full-name/acronym drift. All findings were
+fixed in code or XanoScript and covered by regression or live acceptance tests.
+The final v5 identity uses deterministic entity and requirement atoms from the
+brief. Model-supplied domains and classifications remain descriptive metadata
+only.
+
+The final public-release review added adversarial coverage for infix comparisons,
+shortlists, Chinese directives, dotted initialisms, legal suffixes, single-vendor
+aliases, and same-name companies. VendorProof first confirms the entity-to-domain
+mapping independently. It then accepts third-party evidence only when the exact
+entity identity remains visible and the surrounding result metadata does not name
+a different compound entity. The review converged with no remaining actionable
+findings.
 
 The fixes included citation-byte preservation, fail-closed provider behavior,
 partial-channel risk handling, safe model/provider error surfaces, strict live
@@ -251,9 +277,11 @@ live integration smoke test.
 
 ### 2026-08-29 — verification and public release foundation
 
-Converged the automated suite to 40 tests and 94.37% coverage, completed the
-independent review loop, verified the interface in a browser, created the public
-GitHub repository, and added passing CI.
+The first public-release foundation converged at 100 tests and 94.81% coverage,
+completed its independent review loop, verified the interface in a browser,
+created the public GitHub repository, and added passing CI. Subsequent sponsor
+integration hardening later expanded the suite to 159 tests at 94.82%
+coverage at that checkpoint.
 
 ### 2026-08-29 — preproduction deployment
 
@@ -265,36 +293,123 @@ Xano services.
 
 ### 2026-08-29 — account blocker confirmed
 
-Devpost, SerpApi, and Xano were each opened to the correct registration/login
-surface, but no authenticated account/workspace was completed. No matching
-SerpApi or Xano credentials exist in the local environment or project. Repeated
-checks reached the same human-account boundary, so the active project goal was
-correctly marked blocked rather than claiming false completion.
+The first account pass reached human registration gates on Devpost, SerpApi,
+and Xano, so the project correctly remained unsubmitted rather than claiming a
+false live integration.
+
+### 2026-08-29 — Devpost registration completed
+
+Completed the participant profile and registered Simon for the DevNetwork event
+with Hong Kong as the participation location. The submission management page is
+available, but no empty project was created because a real working demo remains
+the submission gate.
+
+### 2026-08-29 — Xano backend provisioned and accepted
+
+Created the free Xano workspace resources used by VendorProof:
+
+- `briefs` table with unique deterministic `brief_hash`;
+- `snapshots` table related to `briefs`, storing the complete validated report;
+- `POST https://x8ki-letl-twmt.n7.xano.io/api:vendorproof/snapshots`;
+- private workspace environment variable checked before any data processing;
+- corresponding Xano credential in Google Secret Manager, with no value printed
+  or committed.
+
+The first comparison implementation used AI-generated array filtering but
+incorrectly returned zero changes. An attempted associative-diff filter also
+failed at Xano runtime. The final published implementation uses explicit nested
+loops and was exercised against the live data source: no prior snapshot returned
+`0`, a verdict change returned `1`, an added claim returned `1`, and one removal
+plus one verdict change returned `2`. The real Python adapter then wrote snapshot
+`9`, proving the application contract matches the published endpoint.
+
+An independent follow-up review caught two deeper refresh-history risks. Exact
+claim prose was too unstable to serve as identity because Gemini may paraphrase
+the same fact, and two simultaneous writes could both read the same predecessor.
+The extractor now emits exact vendor and requirement anchors from the brief, an
+official domain, and a fixed check category. The application rejects anchors
+not present in the input, requires complete entity spans, retains the validated
+exact entity name, maps requirement spans to deterministic brief atoms, binds
+search queries to those entities, derives v5 `comparison_key` from entity names
+and requirement atoms, deduplicates by it, and Xano
+compares it inside a per-brief transaction protected by a row lock. Live
+snapshots `10` and `11` proved that paraphrasing with the same key produces zero
+changes, snapshot `12` proved a verdict change produces one, and simultaneous
+snapshots `13` and `14` proved that the second write names the first as its
+predecessor and records the changed verdict. A final legacy sequence, snapshots
+`18`–`20`, proved that an old keyless report receives one zero-change baseline
+before normal verdict-change tracking resumes. Snapshots `33`–`35` then proved
+the v4 migration path: a v3 predecessor produced a zero-change baseline,
+followed by exactly one change for a v4 verdict transition. The published v5
+schema adds an explicit report-level comparison version so valid empty current
+snapshots remain comparable. Snapshots `36`–`39` proved unchanged, verdict-change,
+and domain-change behavior; snapshots `40`–`41` proved an empty report can become
+one added claim. The application binds domains written beside vendors in the
+brief and otherwise requires an independent Google knowledge-panel confirmation.
+Evidence from a same-name company domain is excluded before assessment.
+
+The authentication transport was changed from an unreliable request-header
+lookup to a required `api_token` body field over HTTPS. The Python adapter,
+tests, public contract, and XanoScript source were updated together. Ruff and all
+159 tests passed at that checkpoint. Independent review found and closed missing-token fail-closed,
+claim-identity, concurrency, legacy migration, common comparison separator,
+exact entity-query, Unicode entity matching, descriptive namesake, compound
+namesake-domain, and public-suffix gaps. Each fix has a regression test.
+
+A final release review then found and closed full-URL vendor annotations,
+subject-prefixed and quantified global requirements, later-acronym identity
+drift, legal-suffix sentence splitting, thousands-separated budgets,
+entity-only requirement identities, and third-party namesake evidence without
+an explicit verified-domain link. The final pass also isolated requirements in
+trailing comparison scopes and accepted ordinary source titles when the brief
+used an equivalent legal company suffix. The last input pass made `vs.` and
+legal-suffix periods context-aware, aligned bracketed domain annotations, kept
+budget constraints separate from following directives, normalized annotated
+entity anchors and legal-name lists, and strengthened the live smoke gate to
+require an observed citation. A final adversarial round then preserved both
+vendors in infix `vs` comparisons, applied shared shortlist requirements to every
+listed vendor, separated Chinese requirement tails from company names, and
+required explicit official-domain metadata on third-party evidence after identity
+confirmation. The converged release suite is 391 tests at 95.26% branch-aware
+whole-project coverage, with Ruff clean.
+
+The real Vertex AI extraction smoke then processed the annotated sample brief
+with Gemini 3.5 Flash and returned eight valid checks across Intercom, Zendesk,
+and Crisp, with zero rejected anchors. This verifies the extraction and brief
+binding layer independently of search.
+
+### 2026-08-30 — SerpApi gate cleared and complete live smoke accepted
+
+Simon completed SerpApi account verification. The private key was stored in
+Google Secret Manager as `vendorproof-serpapi-api-key` version `1`; it was not
+written to the repository or ordinary environment configuration. Secret
+Accessor was granted only to the standalone VendorProof runtime identity.
+
+`scripts/live_smoke.py` then completed a real Gemini 3.5 Flash + SerpApi Google
+web/news + Xano run. It returned five procurement claims, preserved conservative
+`insufficient` states where evidence was incomplete, produced live citations,
+and wrote Xano snapshot `42`. The remaining release work is final diff re-review,
+zero-traffic Cloud Run candidate QA, promotion, demo capture, and Devpost
+submission verification.
 
 ## 11. Exact resume and promotion checklist
 
-When Simon is ready, resume in this order:
+Resume in this order:
 
-1. Complete Devpost registration for the DevNetwork event.
-2. Create/log into SerpApi and obtain the hackathon-capable key.
-3. Create/log into Xano, confirm a zero-cost workspace, and provision the schema
-   and server-side snapshot endpoint from `docs/XANO_BACKEND.md`.
-4. Store SerpApi and Xano values in Google Secret Manager; grant access only to
-   the VendorProof runtime identity.
-5. Deploy a tagged or zero-traffic candidate revision pinned to explicit secret
-   versions.
-6. Run `scripts/live_smoke.py` against Gemini, SerpApi, and Xano.
-7. Submit the sample procurement brief through the candidate/public interface.
-8. Verify exact clickable SerpApi citations, partial-failure markers, conservative
-   verdicts, and a real Xano snapshot receipt.
-9. Promote the verified revision to 100% traffic.
-10. Capture the real report screenshots and record the demo video.
-11. Complete Devpost fields, select both cash tracks, and submit.
-12. Re-open the management page and record positive evidence that the entry is
+1. Complete the final release-diff review and push the verified revision.
+2. Deploy a tagged or zero-traffic candidate revision with explicit SerpApi and
+   Xano secret versions.
+3. Submit the sample procurement brief through the candidate interface.
+4. Verify exact clickable SerpApi citations, partial-failure markers,
+   conservative verdicts, and a real Xano snapshot receipt.
+5. Promote the verified revision to 100% traffic.
+6. Capture the real report screenshots and record the demo video.
+7. Complete Devpost fields, select both cash tracks, and submit.
+8. Re-open the management page and record positive evidence that the entry is
     `SUBMITTED`.
 
 No fake provider, seeded citation, stub result, or fallback report may be used
-to bypass steps 4–8.
+to bypass steps 2–6.
 
 ## 12. Project boundaries and source of truth
 

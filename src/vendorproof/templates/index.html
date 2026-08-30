@@ -57,6 +57,10 @@
           <p>{{ report.claims|length }} critical checks completed with current SerpApi evidence.</p>
         </div>
 
+        {% if report.extraction_warning %}
+        <div class="history-note history-warning">{{ report.extraction_warning }}</div>
+        {% endif %}
+
         {% if report.snapshot %}
         <div class="history-note">
           <strong>Xano snapshot {{ report.snapshot.snapshot_id }}</strong>

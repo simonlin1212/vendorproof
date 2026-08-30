@@ -14,6 +14,7 @@ from vendorproof.models import (
     SnapshotReceipt,
     SourceRecord,
     Verdict,
+    reject_ambiguous_entity_domains,
 )
 
 MAX_INPUT_CHARS = 12_000
@@ -29,7 +30,7 @@ class ClaimExtractor(Protocol):
 
 
 class LiveSearcher(Protocol):
-    def search(self, query: str) -> SearchOutcome: ...
+    def search(self, candidate: ClaimCandidate) -> SearchOutcome: ...
 
 
 class EvidenceJudge(Protocol):
@@ -57,15 +58,67 @@ class AuditService:
 
     def audit(self, text: str) -> AuditReport:
         normalized = self._normalize_input(text)
-        candidates = self._bounded_unique_claims(self._extractor.extract(normalized))
+        extracted = self._extractor.extract(normalized)
+        extracted, ambiguous_rejected = reject_ambiguous_entity_domains(extracted)
+        candidates = self._bounded_unique_claims(extracted)
+        rejected_count = (
+            getattr(self._extractor, "rejected_count", 0) + ambiguous_rejected
+        )
         results = [self._audit_claim(candidate) for candidate in candidates]
+        verified_entities = {
+            self._entity_identity(result.candidate)
+            for result in results
+            if result.entity_domain_verified
+        }
+        for index, result in enumerate(results):
+            if (
+                not result.entity_domain_verified
+                and self._entity_identity(result.candidate) in verified_entities
+            ):
+                results[index] = self._audit_claim(result.candidate)
+        overall_action = self._overall_action(results)
+        extraction_warning = None
+        if rejected_count:
+            extraction_warning = (
+                f"{rejected_count} generated check(s) required a safety retry or "
+                "could not be mapped to this brief. Review the requirements and retry."
+            )
+            if overall_action == "publish":
+                overall_action = "review"
         report = AuditReport(
             generated_at=datetime.now(UTC),
-            overall_action=self._overall_action(results),
+            overall_action=overall_action,
             claims=results,
+            extraction_warning=extraction_warning,
         )
         if self._store is None:
             return report
+        if rejected_count:
+            return report.model_copy(
+                update={
+                    "persistence_error": (
+                        "Xano history was not saved because extraction was incomplete."
+                    )
+                }
+            )
+        if not results:
+            return report.model_copy(
+                update={
+                    "persistence_error": (
+                        "Xano history was not saved because no verifiable claims "
+                        "were extracted."
+                    )
+                }
+            )
+        if any(not result.entity_domain_verified for result in results):
+            return report.model_copy(
+                update={
+                    "persistence_error": (
+                        "Xano history was not saved because a vendor identity "
+                        "could not be confirmed on its official domain."
+                    )
+                }
+            )
         try:
             receipt = self._store.save(normalized, report)
         except Exception:
@@ -89,13 +142,17 @@ class AuditService:
         return normalized
 
     @staticmethod
+    def _entity_identity(candidate: ClaimCandidate) -> tuple[str, str]:
+        return candidate.entity_anchor.casefold(), candidate.entity_domain
+
+    @staticmethod
     def _bounded_unique_claims(
         candidates: list[ClaimCandidate],
     ) -> list[ClaimCandidate]:
         unique: list[ClaimCandidate] = []
         seen: set[str] = set()
         for candidate in candidates:
-            key = candidate.text.casefold()
+            key = candidate.comparison_key
             if key in seen:
                 continue
             seen.add(key)
@@ -106,7 +163,7 @@ class AuditService:
 
     def _audit_claim(self, candidate: ClaimCandidate) -> ClaimResult:
         try:
-            outcome = self._searcher.search(candidate.query)
+            outcome = self._searcher.search(candidate)
         except Exception:
             return ClaimResult(
                 candidate=candidate,
@@ -123,6 +180,7 @@ class AuditService:
                     citation_urls=[],
                 ),
                 search_error="Live search was unavailable for this claim.",
+                entity_domain_verified=False,
             )
 
         assessment = self._judge.assess(candidate, outcome.sources)
@@ -171,6 +229,7 @@ class AuditService:
             sources=outcome.sources,
             assessment=guarded,
             search_error=search_error,
+            entity_domain_verified=outcome.entity_domain_verified,
         )
 
     @staticmethod

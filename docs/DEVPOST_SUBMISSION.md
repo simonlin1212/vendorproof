@@ -53,10 +53,13 @@ provider credentials never reach the browser.
 ## How Xano is used
 
 Xano replaces the spreadsheet history layer. It owns the `briefs` and
-`snapshots` records, finds or creates a normalized brief, loads the previous
-snapshot, counts changed claim verdicts, saves the complete report, and returns
-a compact receipt to VendorProof. This makes each refresh auditable rather than
-overwriting the last comparison.
+`snapshots` records, finds or creates a normalized brief, locks that brief inside
+a database transaction, loads the previous snapshot, and compares keys that
+VendorProof maps exact model anchors back to deterministic entity and requirement
+atoms in the immutable brief. Model-supplied domains and fact categories remain
+descriptive metadata, so shorter nested phrases, aliases, or classifications cannot change
+persistent identity. It then saves the complete report and returns a compact
+receipt. This avoids false changes and stale concurrent predecessors.
 
 ## Challenges
 
@@ -70,9 +73,11 @@ review rounds found these edge cases, and each one now has a regression test.
 
 - Exact live-source citation enforcement
 - Visible partial-search and persistence failures
+- Visible rejected-anchor warnings that force review instead of silent omission
 - Conservative decision states instead of false certainty
-- 40 passing tests with 94% coverage
-- Independent review converged to no actionable regressions
+- 391 passing tests with 95.26% branch-aware coverage
+- Complete Gemini + SerpApi + Xano live smoke with Xano snapshot 42
+- Independent review converged with no remaining actionable findings
 - Responsive procurement-dossier interface
 - Reproducible Python 3.12 deployment image
 

@@ -1,6 +1,8 @@
 from datetime import UTC, datetime
 
-from vendorproof.app import create_app
+import pytest
+
+from vendorproof.app import _service_from_environment, create_app
 from vendorproof.models import (
     AuditReport,
     ClaimAssessment,
@@ -20,7 +22,14 @@ class FakeService:
         self.briefs.append(brief)
         if self.fail:
             raise self.fail
-        candidate = ClaimCandidate(text="Acme supports SSO", query="Acme SSO")
+        candidate = ClaimCandidate(
+            entity_anchor="Acme",
+            entity_domain="acme.com",
+            requirement_anchor="SSO",
+            fact_category="other_capability",
+            text="Acme supports SSO",
+            query="Acme SSO",
+        )
         return AuditReport(
             generated_at=datetime.now(UTC),
             overall_action="review",
@@ -50,6 +59,26 @@ def test_home_and_health_render() -> None:
     assert home.status_code == 200
     assert b"Evidence before" in home.data
     assert health.json == {"service": "vendorproof", "status": "ok"}
+
+
+def test_runtime_factory_allows_local_mode_without_xano(monkeypatch) -> None:
+    monkeypatch.setenv("SERPAPI_API_KEY", "test-key")
+    monkeypatch.delenv("XANO_SNAPSHOT_ENDPOINT", raising=False)
+    monkeypatch.delenv("XANO_API_TOKEN", raising=False)
+    monkeypatch.setattr("vendorproof.app.create_gemini_client", lambda: object())
+
+    service = _service_from_environment()
+
+    assert service._store is None
+
+
+def test_runtime_factory_requires_token_for_configured_xano(monkeypatch) -> None:
+    monkeypatch.setenv("SERPAPI_API_KEY", "test-key")
+    monkeypatch.setenv("XANO_SNAPSHOT_ENDPOINT", "https://example.xano.io/snapshots")
+    monkeypatch.delenv("XANO_API_TOKEN", raising=False)
+
+    with pytest.raises(RuntimeError, match="XANO_API_TOKEN"):
+        _service_from_environment()
 
 
 def test_analyze_renders_report_and_escapes_input() -> None:
@@ -108,3 +137,19 @@ def test_multibyte_brief_reaches_character_validation() -> None:
 
     assert response.status_code == 200
     assert service.briefs == ["测" * 12_000]
+
+
+def test_extraction_warning_is_visible() -> None:
+    class WarningService(FakeService):
+        def audit(self, brief: str) -> AuditReport:
+            report = super().audit(brief)
+            return report.model_copy(
+                update={"extraction_warning": "One generated check was excluded."}
+            )
+
+    response = create_app(lambda: WarningService()).test_client().post(
+        "/analyze", data={"brief": "Compare Acme."}
+    )
+
+    assert response.status_code == 200
+    assert b"One generated check was excluded." in response.data

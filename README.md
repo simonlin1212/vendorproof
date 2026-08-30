@@ -10,8 +10,8 @@
 <p align="center">
   <a href="https://github.com/simonlin1212/vendorproof/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/simonlin1212/vendorproof/actions/workflows/ci.yml/badge.svg"></a>
   <img alt="Python 3.12" src="https://img.shields.io/badge/Python-3.12-19312c">
-  <img alt="40 tests" src="https://img.shields.io/badge/tests-40%20passing-c8f74a">
-  <img alt="coverage 94%" src="https://img.shields.io/badge/coverage-94%25-ff5b3d">
+  <img alt="391 tests" src="https://img.shields.io/badge/tests-391%20passing-c8f74a">
+  <img alt="coverage 95%" src="https://img.shields.io/badge/coverage-95%25-ff5b3d">
   <img alt="MIT license" src="https://img.shields.io/badge/license-MIT-19312c">
 </p>
 
@@ -54,15 +54,25 @@ VendorProof turns that spreadsheet into a repeatable evidence file:
 ## How it works
 
 1. Gemini converts a bounded procurement brief into at most five verifiable
-   claims and focused search queries.
+   claims with exact vendor and requirement anchors copied from the brief,
+   official domains, fixed fact categories, and focused search queries.
+   VendorProof rejects anchors absent from the input and derives persistent
+   identity from deterministic entity and requirement atoms in the immutable
+   brief; model-selected wording, domains, and categories cannot change it.
 2. SerpApi runs Google Light and Google News searches for each claim.
+   Domains written beside a vendor in the brief are bound to that vendor; when
+   the brief omits one, a separate Google knowledge-panel lookup must confirm
+   the model-selected domain. Same-name company domains are excluded from the
+   evidence set.
 3. Gemini evaluates only the returned evidence and produces a structured
    assessment.
 4. A provenance guard removes citations that were not observed byte-for-byte in
    the current SerpApi response and downgrades unsupported conclusions.
 5. Partial search failures remain visible and can never produce a silent
    all-clear.
-6. Xano saves the brief and complete report as a new evidence snapshot.
+6. Unmappable generated checks remain visible and force a review state.
+7. Xano serializes writes per brief, compares stable claim keys, and saves the
+   complete report as a new evidence snapshot.
 
 ## Architecture
 
@@ -115,24 +125,29 @@ uv run python scripts/live_smoke.py
 ```
 
 The Xano schema and endpoint contract are documented in
-[docs/XANO_BACKEND.md](docs/XANO_BACKEND.md).
+[docs/XANO_BACKEND.md](docs/XANO_BACKEND.md). The current v5 XanoScript source is
+included under [xano/](xano/) and is published on the live endpoint.
 
 ## Deployment
 
 The repository includes a reproducible Python 3.12 container image. Production
 deployment uses Cloud Run with secrets supplied as runtime environment values.
-The public demo URL will be added after the real SerpApi and Xano integration
-smoke test passes. The current health-only deployment and its promotion gate are
-recorded in [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
+The public service is deployed, but the accepted configuration still needs a
+zero-traffic candidate deployment, browser QA, and promotion before it becomes
+the working demo. The Xano backend is already published and live-tested. The
+promotion gate is recorded in
+[docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
 
 ## Verification status
 
-- 40 tests passing
-- 94% branch-aware project coverage
+- 391 tests passing
+- 95.26% branch-aware project coverage
 - Ruff clean
 - Google Vertex AI structured-output smoke passed with `gemini-3.5-flash`
-- Independent code review converged to no actionable regressions
-- Live SerpApi + Xano smoke pending account access
+- Xano v5 passed live acceptance, including stable refreshes, verdict changes,
+  domain changes, and an empty-to-added report transition (snapshots 36–41)
+- Complete Gemini + SerpApi + Xano live smoke passed and wrote Xano snapshot 42
+- Final release-diff re-review and zero-traffic Cloud Run candidate QA remain
 
 See [DEV_LOG.md](DEV_LOG.md) for dated evidence and [NEXT.md](NEXT.md) for the
 current release gate.

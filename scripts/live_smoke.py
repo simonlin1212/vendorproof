@@ -10,7 +10,12 @@ from vendorproof.smoke import validate_live_report
 
 def main() -> None:
     load_dotenv()
-    required = ["SERPAPI_API_KEY", "GOOGLE_CLOUD_PROJECT"]
+    required = [
+        "SERPAPI_API_KEY",
+        "GOOGLE_CLOUD_PROJECT",
+        "XANO_SNAPSHOT_ENDPOINT",
+        "XANO_API_TOKEN",
+    ]
     missing = [name for name in required if not os.getenv(name)]
     if missing:
         raise SystemExit(f"Missing required configuration: {', '.join(missing)}")
@@ -27,9 +32,6 @@ def main() -> None:
             f"sources={len(result.sources)} "
             f"citations={len(result.assessment.citation_urls)}"
         )
-    if report.snapshot:
-        print(f"XANO_SNAPSHOT=ok id={report.snapshot.snapshot_id}")
-    elif os.getenv("XANO_SNAPSHOT_ENDPOINT"):
-        raise SystemExit(report.persistence_error or "Xano snapshot was not saved.")
+    print(f"XANO_SNAPSHOT=ok id={report.snapshot.snapshot_id}")
 if __name__ == "__main__":
     main()

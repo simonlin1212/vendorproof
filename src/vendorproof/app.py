@@ -17,7 +17,8 @@ from vendorproof.providers import (
 from vendorproof.service import AuditService, InputError
 
 DEFAULT_MODEL = "gemini-3.5-flash"
-SAMPLE_BRIEF = """Compare Intercom, Zendesk, and Crisp for a five-person SaaS team.
+SAMPLE_BRIEF = """Compare Intercom (intercom.com), Zendesk (zendesk.com), and
+Crisp (crisp.chat) for a five-person SaaS team.
 Budget: US$100 per month. Must have a shared inbox, chatbot, knowledge base, and
 Slack integration. Prefer month-to-month billing. Flag recent outages, pricing
 changes, or major service issues."""
@@ -95,17 +96,17 @@ def _service_from_environment() -> AuditService:
     serpapi_key = os.getenv("SERPAPI_API_KEY")
     if not serpapi_key:
         raise RuntimeError("SERPAPI_API_KEY is not configured.")
-    client = create_gemini_client()
-    model = os.getenv("VENDORPROOF_MODEL", DEFAULT_MODEL)
     xano_endpoint = os.getenv("XANO_SNAPSHOT_ENDPOINT")
+    xano_token = os.getenv("XANO_API_TOKEN")
+    if xano_endpoint and not xano_token:
+        raise RuntimeError("XANO_API_TOKEN is not configured.")
     store = (
-        XanoSnapshotStore(
-            xano_endpoint,
-            api_token=os.getenv("XANO_API_TOKEN"),
-        )
+        XanoSnapshotStore(xano_endpoint, api_token=xano_token)
         if xano_endpoint
         else None
     )
+    client = create_gemini_client()
+    model = os.getenv("VENDORPROOF_MODEL", DEFAULT_MODEL)
     return AuditService(
         extractor=GeminiClaimExtractor(client, model),
         searcher=SerpApiSearchGateway(api_key=serpapi_key),
