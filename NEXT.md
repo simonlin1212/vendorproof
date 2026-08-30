@@ -4,6 +4,8 @@ Updated: 2026-08-30 Asia/Singapore
 
 ## Current state
 
+- Production ran across two focused calendar days, from project selection on
+  2026-08-29 to the positively confirmed Devpost submission on 2026-08-30.
 - Official Devpost submission:
   `https://devpost.com/software/vendorproof` (`SUBMITTED`, project `1160958`).
 - Public production demo:
@@ -16,9 +18,10 @@ Updated: 2026-08-30 Asia/Singapore
   sponsor tracks: `SerpApi – Best AI Use Case` and
   `Xano: Rebuild a SaaS Tool You Hate`.
 - 391 tests pass at 95.26% coverage and Ruff is clean.
-- The release code is commit `3aac90d`; GitHub Actions run `33291331586`
-  passed, independent review converged with no actionable regression, and
-  GitHub Secret Scanning plus Push Protection are enabled.
+- The release code is commit `3aac90d`; the submission record is commit
+  `004c116`; GitHub Actions run `33302070873` passed, independent review
+  converged with no actionable regression, and GitHub Secret Scanning plus
+  Push Protection are enabled.
 - Production is Cloud Run revision `vendorproof-web-00003-qeg` at 100% traffic.
 - Gemini 3.5 Flash structured-output smoke passed on Vertex AI, and the final
   production smoke completed the Gemini + SerpApi + Xano chain in 12.4 seconds.
@@ -39,6 +42,12 @@ Updated: 2026-08-30 Asia/Singapore
 - Desktop QA, exact 390×844 mobile emulation, public video playback, Devpost
   preview, the two sponsor selections, and the public Drive backup were all
   verified before submission.
+- The 2026-08-30 post-submission documentation recheck kept the public home and
+  health routes at HTTP 200. Two fresh analyses returned HTTP 200 cited dossiers
+  in 71.1 and 72.1 seconds, but both visibly skipped Xano history because the
+  official-domain identity guard could not confirm every vendor from the live
+  search evidence. Do not relabel these two runs as full three-provider smoke
+  passes; snapshots `46`–`48` remain the accepted release evidence.
 
 ## Immediate next actions
 
@@ -46,7 +55,8 @@ Updated: 2026-08-30 Asia/Singapore
    until judging ends. Change them only for a security incident or a confirmed
    availability failure.
 2. Keep provider spending and Cloud Run usage under observation while the demo
-   remains public.
+   remains public. Also monitor whether fresh search evidence clears the Xano
+   official-domain guard; do not weaken that guard merely to force a receipt.
 3. After judging, rotate the SerpApi and Xano credentials if the live demo will
    stay online, then redeploy and repeat the full production smoke.
 

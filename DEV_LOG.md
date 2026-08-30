@@ -4,9 +4,9 @@ Updated: 2026-08-30 Asia/Singapore
 
 ## 1. Current status
 
-VendorProof is the active third hackathon project. It is an evidence-first
-procurement desk for the DevNetwork [API + Cloud + AI] Hackathon 2026, targeting
-the SerpApi and Xano cash tracks.
+VendorProof is the submitted and judging-frozen third hackathon project. It is
+an evidence-first procurement desk for the DevNetwork [API + Cloud + AI]
+Hackathon 2026, targeting the SerpApi and Xano cash tracks.
 
 The codebase, test suite, public repository, production deployment, public demo
 video, Devpost entry, and Xano backend are complete. VendorProof was formally
@@ -17,7 +17,7 @@ project page.
 | Area | State | Evidence |
 |---|---|---|
 | Source repository | Public | `https://github.com/simonlin1212/vendorproof`; XanoScript is included under `xano/` in this update |
-| CI | Passing | GitHub Actions run `33291331586` for release commit `3aac90d` |
+| CI | Passing | Release run `33291331586` passed for code commit `3aac90d`; final recorded run `33302070873` passed for submission-record commit `004c116` |
 | Unit/regression tests | Passing | 391 tests, 95.26% whole-project coverage |
 | Static quality | Passing | Ruff clean |
 | Gemini | Verified separately | Vertex AI structured-output smoke passed with `gemini-3.5-flash` in `global` |
@@ -34,6 +34,24 @@ project page.
 The status words above are deliberate. The production claim is based on a real
 three-provider dossier and Xano receipt, not a health route. The submission
 claim is based on Devpost's positive submitted state, not a completed form.
+
+### 1.1 Two-day production overview
+
+VendorProof went from sponsor-track selection to a positively confirmed
+Devpost submission in two focused calendar days: 2026-08-29 and 2026-08-30.
+The duration matters because the project did not stop at a prototype or a
+healthy web page; it completed real sponsor integrations, release hardening,
+production acceptance, a public demo, and the final submission state.
+
+| Day | Main production work | End-of-day gate |
+|---|---|---|
+| 2026-08-29 — foundation and sponsor backend | Selected one coherent procurement product for the SerpApi and Xano cash tracks; built the typed Gemini/SerpApi/Xano pipeline, deterministic provenance guard, Flask UI, live-smoke tooling, tests, public repository, CI, bilingual documentation, and Cloud Run preproduction; registered Simon for the event from Hong Kong; provisioned and repeatedly hardened the Xano backend through deterministic identity, migration, and concurrency tests. | Public code, CI, browser UI, Cloud Run shell, Devpost registration, and the real Xano endpoint were ready. SerpApi was still behind human account verification, so `/analyze` correctly failed closed with HTTP 503 and the project remained explicitly unsubmitted. |
+| 2026-08-30 — real integration, release, media, and submission | Cleared SerpApi verification; stored provider credentials in Secret Manager; passed the real Gemini + SerpApi + Xano smoke; expanded the regression suite to 391 tests; converged independent review; pushed release commit `3aac90d`; corrected the newline-contaminated Xano secret by creating exact version 2; accepted candidate snapshots `46` and `47`; promoted revision `vendorproof-web-00003-qeg`; passed production snapshot `48`; completed desktop/mobile QA; produced and published the 3:15 demo; verified the public MP4 backup; completed the Devpost story, gallery, links, terms, and both cash tracks. | Devpost project `1160958` showed `Project submitted!` and `SUBMITTED TO`; the later reload still showed the submitted state. Submission-record commit `004c116` passed GitHub Actions run `33302070873`, after which all judged materials entered the freeze. |
+
+This was therefore a two-day production closeout, not a two-day background
+process left running. The first day established and challenged the product and
+integration architecture. The second day converted that foundation into a
+verified production release and an accepted competition submission.
 
 ## 2. Competition decision
 
@@ -246,9 +264,10 @@ The dedicated VendorProof service account and service are separate from Agentic
 Brief and ScriptProof. No judged artifact from either submitted project was
 modified to create VendorProof.
 
-## 9. Submission package prepared
+## 9. Submission package preparation checkpoint (historical)
 
-The following materials exist but are not yet final submission evidence:
+At this pre-submission checkpoint, the following materials existed but were not
+yet final submission evidence:
 
 - copy-ready Devpost project story in `docs/DEVPOST_SUBMISSION.md`;
 - approximately 2.5-minute English demo script in `docs/DEMO_SCRIPT.md`;
@@ -444,6 +463,32 @@ Devpost project `1160958` was completed with:
 The final click redirected to `https://devpost.com/software/vendorproof` and
 showed `Project submitted!` plus `SUBMITTED TO DevNetwork [API + Cloud + AI]
 Hackathon 2026`. This is the positive evidence for the submitted claim.
+
+### 2026-08-30 — closeout documentation and post-submission recheck
+
+The project configuration, current handoff, detailed log, and Codex memory were
+synchronized around the two-day production window and judging freeze. The
+documentation-only repository change was checked with Ruff, all 391 tests at
+95.26% branch-aware coverage, `git diff --check`, and Gitleaks history plus
+worktree scans. Desktop rendering remained visually intact. Exact 390×844 mobile
+emulation reported `innerWidth=390`, `scrollWidth=390`, and no horizontal
+overflow.
+
+The public home and health routes returned HTTP 200. Two additional real
+production analyses also returned HTTP 200 cited dossiers, in 71.1 and 72.1
+seconds respectively. The full three-vendor sample returned five checks and four
+citation blocks; the smaller Intercom-only retry returned five checks and three
+citation blocks. Neither run produced a new Xano snapshot. In both cases the UI
+visibly reported that history was not saved because the official-domain identity
+guard could not confirm every vendor from that run's current search evidence.
+
+This post-submission result is recorded as degraded persistence, not a new
+three-provider acceptance. The application still returned the evidence file and
+did not fabricate a Xano receipt or hide the warning. It does not erase the
+accepted candidate/browser/production snapshots `46`–`48`, but future status
+reports must not imply that these two closeout runs wrote new snapshots. The
+judged code remains frozen; monitor the condition and do not weaken the identity
+guard merely to force persistence.
 
 ## 11. Post-submission freeze checklist
 
