@@ -13,8 +13,8 @@ ScriptProof repositories.
 - Production: `https://vendorproof-web-qjv2kumm3q-as.a.run.app/`, Cloud Run
   revision `vendorproof-web-00003-qeg` at 100% traffic.
 - Public demo: `https://youtu.be/z9RUGx1DMT8` (3:15, public).
-- Release code: `3aac90d`; submission record: `004c116`; final recorded CI run:
-  `33302070873` (passed).
+- Release code: `3aac90d`; submission record: `004c116`; its CI run
+  `33302070873` passed.
 - Verification: 391 tests, 95.26% branch-aware coverage, Ruff and Gitleaks clean,
   with independent review converged.
 - Post-submission closeout recheck: the home and health routes remained HTTP

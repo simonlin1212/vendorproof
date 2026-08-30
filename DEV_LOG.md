@@ -17,7 +17,7 @@ project page.
 | Area | State | Evidence |
 |---|---|---|
 | Source repository | Public | `https://github.com/simonlin1212/vendorproof`; XanoScript is included under `xano/` in this update |
-| CI | Passing | Release run `33291331586` passed for code commit `3aac90d`; final recorded run `33302070873` passed for submission-record commit `004c116` |
+| CI | Passing | Release run `33291331586` passed for code commit `3aac90d`; run `33302070873` passed for submission-record commit `004c116` |
 | Unit/regression tests | Passing | 391 tests, 95.26% whole-project coverage |
 | Static quality | Passing | Ruff clean |
 | Gemini | Verified separately | Vertex AI structured-output smoke passed with `gemini-3.5-flash` in `global` |
