@@ -37,6 +37,10 @@ snapshots so a later refresh can show what changed.
 This standalone project targets the SerpApi and Xano cash tracks of the
 [DevNetwork API + Cloud + AI Hackathon 2026](https://api-cloud-ai-hackathon-2026.devpost.com/).
 
+**Live demo:** [VendorProof on Cloud Run](https://vendorproof-web-qjv2kumm3q-as.a.run.app/)
+· **Demo video:** [YouTube](https://youtu.be/z9RUGx1DMT8)
+· **Submission:** [Devpost](https://devpost.com/software/vendorproof)
+
 ## The problem
 
 Vendor comparisons often live in spreadsheets that go stale as soon as prices,
@@ -131,12 +135,10 @@ included under [xano/](xano/) and is published on the live endpoint.
 ## Deployment
 
 The repository includes a reproducible Python 3.12 container image. Production
-deployment uses Cloud Run with secrets supplied as runtime environment values.
-The public service is deployed, but the accepted configuration still needs a
-zero-traffic candidate deployment, browser QA, and promotion before it becomes
-the working demo. The Xano backend is already published and live-tested. The
-promotion gate is recorded in
-[docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
+uses Cloud Run revision `vendorproof-web-00003-qeg` with secrets supplied as
+runtime environment values. The zero-traffic candidate passed the complete
+provider smoke and browser QA before promotion to 100% traffic. Deployment and
+acceptance evidence are recorded in [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
 
 ## Verification status
 
@@ -146,8 +148,14 @@ promotion gate is recorded in
 - Google Vertex AI structured-output smoke passed with `gemini-3.5-flash`
 - Xano v5 passed live acceptance, including stable refreshes, verdict changes,
   domain changes, and an empty-to-added report transition (snapshots 36–41)
-- Complete Gemini + SerpApi + Xano live smoke passed and wrote Xano snapshot 42
-- Final release-diff re-review and zero-traffic Cloud Run candidate QA remain
+- Complete Gemini + SerpApi + Xano candidate smoke passed and wrote Xano
+  snapshot 46
+- Browser functional QA wrote snapshot 47; the promoted production smoke wrote
+  snapshot 48
+- Cloud Run revision `vendorproof-web-00003-qeg` serves 100% of production
+  traffic
+- Public 3:15 demo video and Devpost submission are live
+- Devpost project `1160958` is submitted to both SerpApi and Xano sponsor tracks
 
 See [DEV_LOG.md](DEV_LOG.md) for dated evidence and [NEXT.md](NEXT.md) for the
 current release gate.

@@ -1,7 +1,8 @@
 # VendorProof demo script
 
-Target length: 2 minutes 30 seconds. Record only after the production live smoke
-test passes.
+Target length: 2–4 minutes. The accepted public cut is 3:15 and was produced
+only after the production live smoke passed:
+`https://youtu.be/z9RUGx1DMT8`.
 
 ## 00:00–00:20 — problem
 

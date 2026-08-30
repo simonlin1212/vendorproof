@@ -20,6 +20,10 @@ VendorProof 是面向小团队的证据优先采购助手。输入软件或供�
 [DevNetwork API + Cloud + AI Hackathon 2026](https://api-cloud-ai-hackathon-2026.devpost.com/)
 SerpApi 与 Xano 现金赛道独立开发的项目。
 
+**在线演示：** [Cloud Run](https://vendorproof-web-qjv2kumm3q-as.a.run.app/)
+· **演示视频：** [YouTube](https://youtu.be/z9RUGx1DMT8)
+· **正式提交：** [Devpost](https://devpost.com/software/vendorproof)
+
 ## 解决的问题
 
 供应商对比往往保存在表格里，但价格、套餐限制、集成能力和服务可靠性会不断
@@ -53,8 +57,11 @@ VendorProof 把一次性表格变成可重复核验的证据档案：
 - Gemini 3.5 Flash 结构化输出冒烟测试通过
 - Xano v5 已完成线上验收，快照 36–41 覆盖无变化、结论变化、官网变化和空报告
   新增主张
-- Gemini、SerpApi、Xano 三方真实联调通过，并写入 Xano 快照 42
-- 其后仅剩最终发布差异复审和 Cloud Run 零流量候选版本验收
+- Gemini、SerpApi、Xano 零流量候选版本真实联调通过，写入 Xano 快照 46
+- 浏览器功能验收写入快照 47，正式生产冒烟测试写入快照 48
+- Cloud Run 版本 `vendorproof-web-00003-qeg` 已承接 100% 生产流量
+- 3 分 15 秒公开视频已发布，Devpost 项目 `1160958` 已正式提交
+- SerpApi 与 Xano 两条现金赞助赛道均已选中
 
 英文主文档包含完整架构、运行方法和安全约束，详见
 [README.md](README.md)。当前开发门槛与下一步见 [NEXT.md](NEXT.md)。

@@ -1,7 +1,7 @@
 # VendorProof — Devpost submission copy
 
-Status: copy-ready draft. Replace bracketed URLs only after production smoke
-passes.
+Status: submitted on 2026-08-30 to DevNetwork [API + Cloud + AI] Hackathon
+2026, project `1160958`.
 
 ## Project name
 
@@ -76,7 +76,9 @@ review rounds found these edge cases, and each one now has a regression test.
 - Visible rejected-anchor warnings that force review instead of silent omission
 - Conservative decision states instead of false certainty
 - 391 passing tests with 95.26% branch-aware coverage
-- Complete Gemini + SerpApi + Xano live smoke with Xano snapshot 42
+- Complete candidate Gemini + SerpApi + Xano smoke with Xano snapshot 46
+- Browser functional evidence file with Xano snapshot 47
+- Promoted production smoke with Xano snapshot 48
 - Independent review converged with no remaining actionable findings
 - Responsive procurement-dossier interface
 - Reproducible Python 3.12 deployment image
@@ -102,12 +104,15 @@ SerpApi Google News, Xano, Pydantic, Cloud Run, Docker, pytest, Ruff.
 
 ## Submission links
 
-- Live demo: `[ADD_CLOUD_RUN_URL]`
+- Live demo: `https://vendorproof-web-qjv2kumm3q-as.a.run.app/`
 - Source code: `https://github.com/simonlin1212/vendorproof`
-- Demo video: `[ADD_VIDEO_URL]`
-- Primary image: `assets/screenshots/vendorproof-home.png`
+- Demo video: `https://youtu.be/z9RUGx1DMT8`
+- Devpost: `https://devpost.com/software/vendorproof`
+- Downloadable video backup:
+  `https://drive.usercontent.google.com/download?id=1AkYmkJvLlEonpPjU1AZfAFE3yksbvZPq&export=download&confirm=t`
+- Primary image: `assets/screenshots/vendorproof-devpost-2026-08-30.png`
 
 ## Sponsor categories
 
-- SerpApi — Best AI Use Case
-- Xano — Best AI Application
+- SerpApi – Best AI Use Case
+- Xano: Rebuild a SaaS Tool You Hate

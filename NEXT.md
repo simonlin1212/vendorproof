@@ -4,18 +4,24 @@ Updated: 2026-08-30 Asia/Singapore
 
 ## Current state
 
+- Official Devpost submission:
+  `https://devpost.com/software/vendorproof` (`SUBMITTED`, project `1160958`).
+- Public production demo:
+  `https://vendorproof-web-qjv2kumm3q-as.a.run.app/`.
+- Public demo video:
+  `https://youtu.be/z9RUGx1DMT8` (3:15, public).
 - Independent public repository:
   `https://github.com/simonlin1212/vendorproof`.
-- Devpost account and DevNetwork event registration are complete for Simon's
-  Hong Kong participation.
-- Product direction is fixed: an evidence-first vendor and software procurement
-  desk targeting the SerpApi and Xano cash tracks.
-- Application, tests, interface, deployment image, demo script, and submission
-  copy are implemented.
+- Simon is registered from Hong Kong and the submission targets the two cash
+  sponsor tracks: `SerpApi – Best AI Use Case` and
+  `Xano: Rebuild a SaaS Tool You Hate`.
 - 391 tests pass at 95.26% coverage and Ruff is clean.
-- The previous independent review converged; the final release diff is awaiting
-  one clean re-review before push.
-- Gemini 3.5 Flash structured-output smoke passed on Vertex AI.
+- The release code is commit `3aac90d`; GitHub Actions run `33291331586`
+  passed, independent review converged with no actionable regression, and
+  GitHub Secret Scanning plus Push Protection are enabled.
+- Production is Cloud Run revision `vendorproof-web-00003-qeg` at 100% traffic.
+- Gemini 3.5 Flash structured-output smoke passed on Vertex AI, and the final
+  production smoke completed the Gemini + SerpApi + Xano chain in 12.4 seconds.
 - Xano is fully provisioned and published: the live endpoint is token-protected,
   the Python adapter wrote a real receipt, v5 identity maps model anchors back
   to deterministic brief atoms while excluding model-supplied domains, old
@@ -28,25 +34,28 @@ Updated: 2026-08-30 Asia/Singapore
   across Intercom, Zendesk, and Crisp with zero rejected anchors.
 - SerpApi is verified, its key is stored in Google Secret Manager, and only the
   VendorProof runtime identity has access.
-- The complete local Gemini + SerpApi + Xano live smoke passed with five claims,
-  live citations, and Xano snapshot `42`.
-- The Cloud Run preproduction service is healthy; the accepted integration still
-  needs deployment to a zero-traffic candidate and browser QA.
+- Candidate acceptance produced full-chain snapshot `46`; browser functional QA
+  produced snapshot `47`; the promoted production smoke produced snapshot `48`.
+- Desktop QA, exact 390×844 mobile emulation, public video playback, Devpost
+  preview, the two sponsor selections, and the public Drive backup were all
+  verified before submission.
 
 ## Immediate next actions
 
-1. Complete the final independent review, fix any actionable finding, and push
-   the verified release diff.
-2. Attach both explicit secret versions to a zero-traffic Cloud Run candidate.
-3. Run the complete Gemini + SerpApi + Xano candidate smoke and browser QA.
-4. Promote the verified revision, capture the real report, and record the
-   2–4-minute demo.
-5. Complete the Devpost entry, select both cash tracks, submit, and re-open the
-   management page to record positive `SUBMITTED` evidence.
+1. Freeze the submitted repository, live demo, video, and Devpost materials
+   until judging ends. Change them only for a security incident or a confirmed
+   availability failure.
+2. Keep provider spending and Cloud Run usage under observation while the demo
+   remains public.
+3. After judging, rotate the SerpApi and Xano credentials if the live demo will
+   stay online, then redeploy and repeat the full production smoke.
 
 ## Frozen decisions
 
 - Do not modify the submitted Agentic Brief or ScriptProof projects.
+- Do not modify VendorProof submission materials during the judging freeze
+  without rerunning tests, production smoke, visual QA, and Devpost state
+  confirmation.
 - Xano is a meaningful backend, not an optional badge: it owns normalized briefs,
   immutable report snapshots, and deterministic change counts.
 - Do not claim a verdict is supported unless at least one public citation came

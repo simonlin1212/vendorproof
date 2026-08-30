@@ -8,31 +8,32 @@ VendorProof is the active third hackathon project. It is an evidence-first
 procurement desk for the DevNetwork [API + Cloud + AI] Hackathon 2026, targeting
 the SerpApi and Xano cash tracks.
 
-The codebase, test suite, public repository, Cloud Run preproduction shell,
-submission copy, demo script, Devpost registration, and Xano backend are
-complete. The project is **not submitted** and the public URL is **not yet a
-working demo**: the real three-provider smoke has passed locally, but the
-accepted configuration still needs zero-traffic Cloud Run QA and promotion.
+The codebase, test suite, public repository, production deployment, public demo
+video, Devpost entry, and Xano backend are complete. VendorProof was formally
+submitted on 2026-08-30. Devpost showed both `Project submitted!` and
+`SUBMITTED TO DevNetwork [API + Cloud + AI] Hackathon 2026` on the public
+project page.
 
 | Area | State | Evidence |
 |---|---|---|
 | Source repository | Public | `https://github.com/simonlin1212/vendorproof`; XanoScript is included under `xano/` in this update |
-| CI | Passing | GitHub Actions run `33229641295` |
+| CI | Passing | GitHub Actions run `33291331586` for release commit `3aac90d` |
 | Unit/regression tests | Passing | 391 tests, 95.26% whole-project coverage |
 | Static quality | Passing | Ruff clean |
 | Gemini | Verified separately | Vertex AI structured-output smoke passed with `gemini-3.5-flash` in `global` |
 | Web UI | Implemented and checked | Desktop/mobile render plus browser functional assertions passed |
-| Cloud Run | Preproduction healthy | `vendorproof-web-00001-hzf`; home and health routes return HTTP 200 |
-| Real analysis | Local live smoke passed | Gemini + SerpApi + Xano produced five claims with live citations and Xano snapshot `42` |
-| Devpost registration | Complete | Simon's `linsizhen` profile is registered for the event; no empty submission was created |
+| Cloud Run | Production accepted | `vendorproof-web-00003-qeg` at 100% traffic; public URL returns the working dossier interface |
+| Real analysis | Production live smoke passed | Candidate snapshot `46`, browser snapshot `47`, production snapshot `48`; production HTTP 200 in 12.4 seconds |
+| Devpost | `SUBMITTED` | Project `1160958`, `https://devpost.com/software/vendorproof`, both cash sponsor tracks selected |
 | SerpApi account | Verified and secured | API key is stored as Secret Manager version `1`; only the VendorProof runtime identity has access |
-| Xano workspace | Published and live-tested | Workspace `167898`, API group `430337`, endpoint `4027876`; adapter receipt `snapshot_id=9`, concurrent snapshots `13`–`14`, v4 migration snapshots `33`–`35`, v5 acceptance snapshots `36`–`41` |
-| Demo video | Script prepared, not recorded | Must use a real successful evidence run |
-| Final submission | Not started | Only after the live integration gate passes |
+| Xano workspace | Published and live-tested | Workspace `167898`, API group `430337`, endpoint `4027876`; adapter receipt `snapshot_id=9`, concurrent snapshots `13`–`14`, v4 migration snapshots `33`–`35`, v5 acceptance snapshots `36`–`41`, final release snapshots `46`–`48` |
+| Demo video | Public | 3:15, `https://youtu.be/z9RUGx1DMT8`; YouTube Studio confirms `Public` and no policy issue |
+| Video backup | Public download verified | Google Drive returned HTTP 200, `video/mp4`, and the exact 8,630,407-byte file without authentication |
+| Final submission | Complete | Public preview, images, story, links, video, backup, terms, and both sponsor tracks verified before submit |
 
-The status words above are deliberate. “Cloud Run is live” means the container,
-homepage, and health route work; it does not mean the paid provider integration
-or hackathon submission is complete.
+The status words above are deliberate. The production claim is based on a real
+three-provider dossier and Xano receipt, not a health route. The submission
+claim is based on Devpost's positive submitted state, not a completed form.
 
 ## 2. Competition decision
 
@@ -388,28 +389,76 @@ Accessor was granted only to the standalone VendorProof runtime identity.
 `scripts/live_smoke.py` then completed a real Gemini 3.5 Flash + SerpApi Google
 web/news + Xano run. It returned five procurement claims, preserved conservative
 `insufficient` states where evidence was incomplete, produced live citations,
-and wrote Xano snapshot `42`. The remaining release work is final diff re-review,
-zero-traffic Cloud Run candidate QA, promotion, demo capture, and Devpost
-submission verification.
+and wrote Xano snapshot `42`. This cleared the local integration gate but did
+not yet prove the deployed service.
 
-## 11. Exact resume and promotion checklist
+### 2026-08-30 — release review, candidate acceptance, and production promotion
 
-Resume in this order:
+The final release diff passed Ruff, all 391 tests, 95.26% branch-aware coverage,
+`git diff --check`, Gitleaks history and worktree scans, and an independent
+focused review that returned `No actionable regressions.` Release commit
+`3aac90d` was pushed to `main`; GitHub Actions run `33291331586` completed
+successfully. Repository Secret Scanning and Push Protection were enabled.
 
-1. Complete the final release-diff review and push the verified revision.
-2. Deploy a tagged or zero-traffic candidate revision with explicit SerpApi and
-   Xano secret versions.
-3. Submit the sample procurement brief through the candidate interface.
-4. Verify exact clickable SerpApi citations, partial-failure markers,
-   conservative verdicts, and a real Xano snapshot receipt.
-5. Promote the verified revision to 100% traffic.
-6. Capture the real report screenshots and record the demo video.
-7. Complete Devpost fields, select both cash tracks, and submit.
-8. Re-open the management page and record positive evidence that the entry is
-    `SUBMITTED`.
+Cloud Run candidate revision `vendorproof-web-00003-qeg` was deployed with
+explicit Secret Manager versions. The first Xano secret version contained a
+trailing newline, so the exact token check failed closed. Version `2` was
+created as the exact 64-byte value without trailing whitespace. No source-code
+workaround was added, and version `1` was preserved as rollback evidence.
+
+The candidate then passed three distinct gates:
+
+- a small full-provider run wrote Xano snapshot `45`;
+- the complete three-vendor sample returned HTTP 200 with five critical checks,
+  four evidence blocks, and Xano snapshot `46`;
+- browser submission produced a real `publish` dossier, an exact citation, and
+  Xano snapshot `47`.
+
+Desktop visual QA passed. Exact 390×844 mobile emulation reported
+`scrollWidth=390` and no horizontal overflow. The accepted revision was promoted
+to 100% production traffic. A fresh production smoke returned HTTP 200 in 12.4
+seconds with live evidence and Xano snapshot `48`.
+
+### 2026-08-30 — demo production and Devpost submission
+
+A 1920×1080 English demo was produced from the real deployed interface,
+architecture, evidence file, Xano receipt, and release metrics. The final cut is
+3:15 with hard subtitles. An independent speech-to-text pass reached more than
+90% word-sequence agreement and confirmed the closing lines were present.
+
+YouTube Studio completed its checks with no issue and published the video as
+`Public` at `https://youtu.be/z9RUGx1DMT8`. A byte-identical MP4 backup was
+uploaded to Google Drive, changed to `Anyone with the link`, and verified without
+authentication as HTTP 200 `video/mp4` with content length `8,630,407` bytes.
+
+Devpost project `1160958` was completed with:
+
+- the production Cloud Run URL and public GitHub repository;
+- the public 3:15 YouTube demo;
+- three captioned 3:2 gallery images plus the primary thumbnail;
+- the full build story, two-day build window, technical stack, and Xano logic;
+- `SerpApi – Best AI Use Case` and `Xano: Rebuild a SaaS Tool You Hate`;
+- the public downloadable MP4 backup; and
+- accepted terms and conditions.
+
+The final click redirected to `https://devpost.com/software/vendorproof` and
+showed `Project submitted!` plus `SUBMITTED TO DevNetwork [API + Cloud + AI]
+Hackathon 2026`. This is the positive evidence for the submitted claim.
+
+## 11. Post-submission freeze checklist
+
+The release and submission checklist is complete. During judging:
+
+1. Keep repository, video, Cloud Run revision, and Devpost materials frozen.
+2. For an availability or security incident, make the smallest necessary fix.
+3. Before any submitted-material change, rerun Ruff, the full tests, real
+   production smoke, desktop/mobile QA, and secret scans.
+4. After any change, re-open Devpost and confirm the project remains submitted.
+5. Rotate provider credentials after judging if the public demo remains online,
+   then repeat the zero-traffic candidate and production gates.
 
 No fake provider, seeded citation, stub result, or fallback report may be used
-to bypass steps 2–6.
+for future demos or maintenance validation.
 
 ## 12. Project boundaries and source of truth
 
@@ -417,10 +466,8 @@ to bypass steps 2–6.
   must remain an independent repository, Cloud Run service, identity, secrets,
   Devpost project, and development log.
 - `.env` and credentials must never be committed or printed in logs.
-- Do not label the current Cloud Run URL “production demo” until the promotion
-  checklist passes.
-- Do not label VendorProof “submitted” until Devpost provides positive submitted
-  state evidence.
+- The production and submitted labels are now accepted by the evidence above.
+  Preserve the same distinction for future changes.
 
 Read status in this order:
 
