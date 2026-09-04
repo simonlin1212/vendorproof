@@ -41,6 +41,18 @@ This standalone project targets the SerpApi and Xano cash tracks of the
 · **Demo video:** [YouTube](https://youtu.be/z9RUGx1DMT8)
 · **Submission:** [Devpost](https://devpost.com/software/vendorproof)
 
+---
+
+## Open to AI Roles in Shenzhen
+
+The author is open to AI roles in Shenzhen, particularly in **AI-powered investment research products, Forward Deployed Engineering (FDE), and AI consulting or solutions** at Tencent, other leading technology companies, and financial institutions.
+
+He combines experience in financial institutions with hands-on AI product development, building open-source market data tools and multi-agent systems with **17K+ GitHub stars**.
+
+Contact: [simonlin0423@gmail.com](mailto:simonlin0423@gmail.com)
+
+---
+
 ## The problem
 
 Vendor comparisons often live in spreadsheets that go stale as soon as prices,

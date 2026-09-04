@@ -24,6 +24,18 @@ SerpApi 与 Xano 现金赛道独立开发的项目。
 · **演示视频：** [YouTube](https://youtu.be/z9RUGx1DMT8)
 · **正式提交：** [Devpost](https://devpost.com/software/vendorproof)
 
+---
+
+## 寻找深圳的 AI 工作机会
+
+作者目前正在寻找深圳的 AI 相关工作机会，重点关注腾讯等大型科技企业及金融机构的 **AI 投研产品、FDE 与 AI 咨询 / 解决方案岗位**。
+
+兼具金融机构从业经历与 AI 产品实战，持续构建金融市场数据工具和多智能体系统，开源项目累计获得 **17K+ GitHub Stars**。
+
+联系：[simonlin0423@gmail.com](mailto:simonlin0423@gmail.com)
+
+---
+
 ## 解决的问题
 
 供应商对比往往保存在表格里，但价格、套餐限制、集成能力和服务可靠性会不断
