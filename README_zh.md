@@ -26,15 +26,6 @@ SerpApi 与 Xano 现金赛道独立开发的项目。
 
 ---
 
-## 寻找深圳的 AI 工作机会
-
-作者目前正在寻找深圳的 AI 相关工作机会，重点关注腾讯等大型科技企业及金融机构的 **AI 投研产品、FDE 与 AI 咨询 / 解决方案岗位**。
-
-兼具金融机构从业经历与 AI 产品实战，持续构建金融市场数据工具和多智能体系统，开源项目累计获得 **17K+ GitHub Stars**。
-
-联系：[simonlin0423@gmail.com](mailto:simonlin0423@gmail.com)
-
----
 
 ## 解决的问题
 
@@ -83,9 +74,3 @@ VendorProof 把一次性表格变成可重复核验的证据档案：
 MIT，详见 [LICENSE](LICENSE)。
 
 **作者：** Simon 林 · X [@linsizhen](https://x.com/linsizhen) · 邮箱：[simonlin0423@gmail.com](mailto:simonlin0423@gmail.com)
-
-## 赞赏
-
-<p align="center">
-  <a href="https://buymeacoffee.com/simonlin1212"><img src="./assets/bmc-qr.png" width="180" alt="Buy Me a Coffee"></a>
-</p>
